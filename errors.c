@@ -1,25 +1,27 @@
 #include "shell.h"
 
 /**
- * _eputs - Prints a string to the standard error (stderr)
+ * _eputs - prints an input string
  * @str: the string to be printed
  *
- * Return: 0
+ * Return: Nothing
  */
 void _eputs(char *str)
 {
+	int i = 0;
+
 	if (!str)
 		return;
 
-	while (*str)
+	while (str[i] != '\0')
 	{
-		_eputchar(*str);
-		str++;
+		_eputchar(str[i]);
+		i++;
 	}
 }
 
 /**
- * _eputchar - Writes a character to stderr
+ * _eputchar - writes the character c to stderr
  * @c: The character to print
  *
  * Return: On success 1.
@@ -32,17 +34,18 @@ int _eputchar(char c)
 
 	if (c == BUF_FLUSH || i >= WRITE_BUF_SIZE)
 	{
-		write(STDERR_FILENO, buf, i);
+		write(2, buf, i);
 		i = 0;
 	}
 
 	if (c != BUF_FLUSH)
 		buf[i++] = c;
+
 	return (1);
 }
 
 /**
- * _putfd - Writes a character to the specified file descriptor
+ * _putfd - writes the character c to given fd
  * @c: The character to print
  * @fd: The file descriptor to write to
  *
@@ -62,26 +65,29 @@ int _putfd(char c, int fd)
 
 	if (c != BUF_FLUSH)
 		buf[i++] = c;
+
 	return (1);
 }
 
 /**
- * _putsfd - Prints a string to the specified file descriptor
+ * _putsfd - prints an input string
  * @str: the string to be printed
  * @fd: the file descriptor to write to
  *
- * Return: the number of characters written
+ * Return: the number of chars put
  */
 int _putsfd(char *str, int fd)
 {
-	int count = 0;
+	int i = 0;
 
 	if (!str)
 		return (0);
 
 	while (*str)
 	{
-		count += _putfd(*str, fd);
-		str++;
+		i += _putfd(*str++, fd);
 	}
-	return (count);
+
+	return (i);
+}
+
